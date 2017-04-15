@@ -126,7 +126,7 @@ coverage.xml
 # Django stuff:
 *.log
 config/settings/local.py
-config/settins/production.py
+config/settings/production.py
 
 # Flask stuff:
 instance/
