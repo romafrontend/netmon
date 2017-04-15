@@ -59,6 +59,9 @@ LOCAL_APPS = [
     # custom users app
     'netmon.users.apps.UsersConfig',
     # Your stuff: custom apps go here
+    'apps.core',
+    'apps.customers',
+    'apps.netobjects',
 ]
 
 # See: https://docs.djangoproject.com/en/dev/ref/settings/#installed-apps
