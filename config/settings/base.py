@@ -62,6 +62,7 @@ LOCAL_APPS = [
     'apps.core',
     'apps.customers',
     'apps.netobjects',
+    'apps.backups',
 ]
 
 # See: https://docs.djangoproject.com/en/dev/ref/settings/#installed-apps

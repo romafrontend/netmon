@@ -11,32 +11,39 @@ class Migration(migrations.Migration):
     initial = True
 
     dependencies = [
+        ('netobjects', '0001_initial'),
+        ('customers', '0001_initial'),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='Company',
+            name='BackupFirewall',
             fields=[
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('created', models.DateTimeField(auto_now_add=True)),
                 ('modified', models.DateTimeField(auto_now=True)),
-                ('name', models.CharField(max_length=32)),
+                ('time_interval', models.IntegerField(default=1)),
+                ('file_location', models.CharField(max_length=255)),
+                ('object_backup', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='netobjects.Firewall')),
+                ('site_name', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='customers.Site')),
             ],
             options={
-                'verbose_name_plural': 'Companies',
+                'abstract': False,
             },
         ),
         migrations.CreateModel(
-            name='Site',
+            name='BackupRouter',
             fields=[
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('created', models.DateTimeField(auto_now_add=True)),
                 ('modified', models.DateTimeField(auto_now=True)),
-                ('name', models.CharField(max_length=32)),
-                ('company_name', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='customers.Company')),
+                ('time_interval', models.IntegerField(default=1)),
+                ('file_location', models.CharField(max_length=255)),
+                ('object_backup', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='netobjects.Router')),
+                ('site_name', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='customers.Site')),
             ],
             options={
-                'ordering': ('company_name',),
+                'abstract': False,
             },
         ),
     ]

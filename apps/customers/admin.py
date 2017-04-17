@@ -9,8 +9,8 @@ class CompanyAdmin(admin.ModelAdmin):
 
 
 class SiteAdmin(admin.ModelAdmin):
-    fields = ['name', 'company_name']
-    list_display = ('name', 'company_name')
+    fields = ['company_name', 'name']
+    list_display = ('company_name', 'name')
 
 
 admin.site.register(Company, CompanyAdmin)

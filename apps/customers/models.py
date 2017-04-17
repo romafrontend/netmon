@@ -20,3 +20,6 @@ class Site(TimeStampedModel):
 
     def __str__(self):
         return '%s %s' % (self.company_name, self.name)
+
+    class Meta:
+        ordering = ('company_name',)
