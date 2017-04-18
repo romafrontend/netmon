@@ -18,14 +18,13 @@ class CoreNetworkObject(TimeStampedModel):
     manufacturer = models.CharField(max_length=20, default='')
     model_version = models.CharField(max_length=20, verbose_name='Model', default='')
 
-    # fields that suppose to be fullfilled automatically
-    cli_address = models.CharField(max_length=255, blank=True, null=True)  # 255.255.255.255:22 or blala.dyndns.org:22
-    ipv4_external_address = models.CharField(max_length=255, blank=True, null=True)  # 255.255.255.255
-    dns_address = models.CharField(max_length=255, blank=True, null=True)  # blablabla.dyndns.org
+    # fields that suppose to be fullfilled automatically, I even do not permit to edit them
+    cli_address = models.CharField(max_length=255, blank=True, editable=False)  # 1.1.1.1:22 or blala.dyndns.org:22
+    ipv4_external_address = models.CharField(max_length=255, blank=True, editable=False)  # 255.255.255.255
+    dns_address = models.CharField(max_length=255, blank=True, editable=False)  # blablabla.dyndns.org
 
     class Meta:
         abstract = True
-        ordering = ('site_name',)
 
     def pattern_web_address(self):
         '''First we create/find pattern of one key field, and then use it to autofill another fields'''
@@ -39,11 +38,11 @@ class CoreNetworkObject(TimeStampedModel):
             pattern_web_address = re.match('(^\w+)://(.+)', self.web_address)  # https://blablabla.dyndns.org
             dns_check = True
         # automatically fullfill cli_address, dns_address/ipv4_external_address fields only if they are empty,
-        # and we have pattern_web_address
+        # and we found pattern_web_address
         if pattern_web_address:
             if not self.cli_address:
                 self.cli_address = pattern_web_address.group(2) + ':' + str(self.cli_access_port)
-            if dns_check:
+            if dns_check:  # fullfill only 1 of 2 fields: or dns or ipv4
                 if not self.dns_address:
                     self.dns_address = pattern_web_address.group(2)
             else:
@@ -59,8 +58,9 @@ class CoreNetworkObject(TimeStampedModel):
 
 
 class Firewall(CoreNetworkObject):
-    object_type = models.CharField(max_length=32, default='firewall')
+    # that field we need only for other models to identify what they are working with
+    object_type = models.CharField(max_length=32, default='firewall', editable=False)
 
 
 class Router(CoreNetworkObject):
-    object_type = models.CharField(max_length=32, default='router')
+    object_type = models.CharField(max_length=32, default='router', editable=False)

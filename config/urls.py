@@ -20,7 +20,8 @@ urlpatterns = [
     url(r'^accounts/', include('allauth.urls')),
 
     # Your stuff: custom urls includes go here
-
+    url(r'^customers/', include('apps.customers.urls', namespace='customers')),
+    url(r'^netobjects/', include('apps.netobjects.urls', namespace='netobjects')),
 
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 

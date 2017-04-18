@@ -1,0 +1,9 @@
+{% extends "base.html" %}
+      
+{% block content %}
+    {% for firewall in firewalls_list %}
+    <ul>
+        <li>{{ firewall }}</li>
+    </ul>
+    {% endfor %}
+{% endblock content %}

@@ -45,8 +45,30 @@
               <li class="nav-item">
                 <a class="nav-link" href="{% url 'about' %}">About</a>
               </li>
-            </ul>
 
+              {# Links to app.customers #}
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                  Customers
+                </a>
+                <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                  <a class="dropdown-item" href="{% url 'customers:companies' %}">Companies</a>
+                  <a class="dropdown-item" href="{% url 'customers:sites' %}">Sites</a>
+                </div>
+              </li>
+
+              {# Links to app.netobjects #}
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                  NetObjects
+                </a>
+                <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                  <a class="dropdown-item" href="{% url 'netobjects:firewalls' %}">Firewalls</a>
+                  <a class="dropdown-item" href="{% url 'netobjects:routers' %}">Routers</a>
+                </div>
+              </li>
+            </ul>
+  
             <ul class="nav navbar-nav pull-xs-right">
               {% if request.user.is_authenticated %}
                 <li class="nav-item">
