@@ -1,9 +1,53 @@
 {% extends "base.html" %}
-      
+
 {% block content %}
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col">
+            Site Name
+            </div>
+            <div class="col">
+            Model
+            </div>
+            <div class="col">
+            Web Address
+            </div>
+            <div class="col">
+            CLI address
+            </div>
+            <div class="col">
+            Login
+            </div>
+            <div class="col">
+            Password
+            </div>
+        </div>
+    </div>
+
     {% for firewall in firewalls_list %}
-    <ul>
-        <li>{{ firewall }}</li>
-    </ul>
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col">
+                {{ firewall.site_name }}
+                </div>
+                <div class="col">
+                {{ firewall }}
+                </div>
+                <div class="col">
+                {{ firewall.web_address }}
+                </div>
+                <div class="col">
+                {{ firewall.cli_address }}
+                </div>
+                <div class="col">
+                {{ firewall.login }}
+                </div>
+                <div class="col">
+                {{ firewall.password }}
+                </div>
+            </div>
+        </div>   
     {% endfor %}
+
 {% endblock content %}
+
