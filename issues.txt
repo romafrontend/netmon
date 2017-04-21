@@ -1,6 +1,0 @@
-1)Check why when I refer to Site from Backup via Firewall. I see Site's id not it's representative name
-
-
-- read about 'signals' in Django docs https://docs.djangoproject.com/en/1.11/topics/signals/
-    signal is not OK if the process take more then 2 sec
-- read about 'cerely' https://habrahabr.ru/post/269347/
