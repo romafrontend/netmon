@@ -3,7 +3,7 @@ from django.db import models
 import re  # module for searches
 
 from apps.core.models import TimeStampedModel
-from apps.customers.models import Site
+from apps.customers.models import Company, Site
 # Create your models here.
 
 
@@ -13,6 +13,7 @@ class BluePrintNetworkObject(TimeStampedModel):
     object_type = models.CharField(max_length=20)
     manufacturer = models.CharField(max_length=20)
     model_version = models.CharField(max_length=20, verbose_name='Model')
+    company_name = models.ForeignKey(Company)
 
     def __str__(self):
         return self.manufacturer + ' ' + self.model_version

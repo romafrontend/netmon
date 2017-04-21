@@ -127,6 +127,7 @@ coverage.xml
 *.log
 config/settings/local.py
 config/settings/production.py
+migrations
 
 # Flask stuff:
 instance/
