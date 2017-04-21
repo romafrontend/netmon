@@ -8,21 +8,22 @@ from apps.customers.models import Company, Site
 
 
 class BluePrintNetworkObject(TimeStampedModel):
-    ''' here we add only tech specifications of device, that we take from manufacturer site. Like number of ports and cpu.
-    We don't add nothing like web_address, only attributes that we took from tech specification '''
+    ''' here we add only tech specifications of device, that we take from manufacturer site.
+    Like number of ports and cpu. We don't add nothing like web_address,
+    only attributes that we took from tech specification '''
     object_type = models.CharField(max_length=20)
-    manufacturer = models.CharField(max_length=20)
+    model_family = models.CharField(max_length=20, verbose_name='Family')
     model_version = models.CharField(max_length=20, verbose_name='Model')
-    company_name = models.ForeignKey(Company)
+    company_name = models.ForeignKey(Company, null=True)
 
     def __str__(self):
-        return self.manufacturer + ' ' + self.model_version
+        return self.model_family + ' ' + self.model_version
 
 
 class CoreNetworkObject(TimeStampedModel):
     ''' everything bellow we use to create other network objects with common attributes, like firewalls and routers '''
     # data that we add manually
-    web_address = models.CharField(max_length=29, default='https://')  # https:// + 255.255.255.255 + :65550
+    web_address = models.CharField(max_length=100, default='https://')  # https:// + 255.255.255.255 + :65550
     cli_access_port = models.IntegerField(default=22)
     login = models.CharField(max_length=20)
     password = models.CharField(max_length=20)
@@ -65,7 +66,7 @@ class CoreNetworkObject(TimeStampedModel):
         super().save(*args, **kwargs)  # finally call for normal save method
 
     def __str__(self):
-        return self.spec_model
+        return str(self.spec_model)
 
 
 class Firewall(CoreNetworkObject):
