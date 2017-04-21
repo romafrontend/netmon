@@ -4,3 +4,4 @@
 - read about 'signals' in Django docs https://docs.djangoproject.com/en/1.11/topics/signals/
     signal is not OK if the process take more then 2 sec
 - read about 'cerely' https://habrahabr.ru/post/269347/
+-check why django-debug-toolbar doesn't work

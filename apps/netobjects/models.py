@@ -4,6 +4,8 @@ import re  # module for searches
 
 from apps.core.models import TimeStampedModel
 from apps.customers.models import Company, Site
+
+from .choices import OBJECT_TYPE
 # Create your models here.
 
 
@@ -11,7 +13,7 @@ class BluePrintNetworkObject(TimeStampedModel):
     ''' here we add only tech specifications of device, that we take from manufacturer site.
     Like number of ports and cpu. We don't add nothing like web_address,
     only attributes that we took from tech specification '''
-    object_type = models.CharField(max_length=20)
+    object_type = models.CharField(max_length=2, choices=OBJECT_TYPE)
     model_family = models.CharField(max_length=20, verbose_name='Family')
     model_version = models.CharField(max_length=20, verbose_name='Model')
     company_name = models.ForeignKey(Company, null=True)
