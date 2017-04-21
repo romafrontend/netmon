@@ -43,9 +43,10 @@ pytz==2017.2
 django-redis==4.7.0
 redis>=2.10.5
 
-# SSH client/server packet, we need it for remote access to equipment
-paramiko=2.1.2
-
-
-
 # Your custom requirements go here
+
+# SSH client/server packet, we need it for remote access to equipment
+paramiko==2.1.2
+
+# Task manager
+celery
