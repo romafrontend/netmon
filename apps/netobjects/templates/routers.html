@@ -1,0 +1,9 @@
+{% extends "base.html" %}
+      
+{% block content %}
+    {% for router in routers_list %}
+    <ul>
+        <li>{{ router }}</li>
+    </ul>
+    {% endfor %}
+{% endblock content %}
