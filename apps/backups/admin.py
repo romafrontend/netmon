@@ -5,8 +5,8 @@ from .models import BackupFirewall, BackupRouter
 
 
 class BackupFirewallAdmin(admin.ModelAdmin):
-    fields = ['object_backup', 'time_interval', 'file_location']
-    list_display = ['site_name', 'object_backup', 'time_interval', 'file_location']
+    fields = ['object_backup', 'time_interval']
+    list_display = ['object_backup', 'time_interval']
 
 
 class BackupRouterAdmin(admin.ModelAdmin):
