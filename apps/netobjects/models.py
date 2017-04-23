@@ -11,8 +11,7 @@ from .choices import OBJECT_TYPE
 
 class BluePrintNetworkObject(TimeStampedModel):
     ''' here we add only tech specifications of device, that we take from manufacturer site.
-    Like number of ports and cpu. We don't add nothing like web_address,
-    only attributes that we took from tech specification '''
+    Like number of ports and cpu. We don't add nothing like web_address '''
     object_type = models.CharField(max_length=2, choices=OBJECT_TYPE)
     model_family = models.CharField(max_length=20, verbose_name='Family')
     model_version = models.CharField(max_length=20, verbose_name='Model')
@@ -23,7 +22,10 @@ class BluePrintNetworkObject(TimeStampedModel):
 
 
 class CoreNetworkObject(TimeStampedModel):
-    ''' everything bellow we use to create other network objects with common attributes, like firewalls and routers '''
+    ''' THAT CLASS IS ABSTRACT. Everything bellow we use to create other network objects with common attributes,
+    like firewalls and routers. Here we add fields only that unique for each device,
+    like web address or login/pass. Exception is site_name and spec_model,
+    we need those field to put objects in groups '''
     # data that we add manually
     web_address = models.CharField(max_length=100, default='https://')  # https:// + 255.255.255.255 + :65550
     cli_access_port = models.IntegerField(default=22)
@@ -51,17 +53,13 @@ class CoreNetworkObject(TimeStampedModel):
         if not pattern_web_address:
             pattern_web_address = re.match('(^\w+)://(.+)', self.web_address)  # https://blablabla.dyndns.org
             dns_check = True
-        # automatically fullfill cli_address, dns_address/ipv4_external_address fields only if they are empty,
-        # and we found pattern_web_address
+        # automatically fullfill cli_address, dns_address/ipv4_external_address fields if pattern_web_address == True
         if pattern_web_address:
-            if not self.cli_address:
-                self.cli_address = pattern_web_address.group(2) + ':' + str(self.cli_access_port)
+            self.cli_address = pattern_web_address.group(2) + ':' + str(self.cli_access_port)
             if dns_check:  # fullfill only 1 of 2 fields: or dns or ipv4
-                if not self.dns_address:
-                    self.dns_address = pattern_web_address.group(2)
+                self.dns_address = pattern_web_address.group(2)
             else:
-                if not self.ipv4_external_address:
-                    self.ipv4_external_address = pattern_web_address.group(2)
+                self.ipv4_external_address = pattern_web_address.group(2)
 
     def save(self, *args, **kwargs):
         CoreNetworkObject.pattern_web_address(self)
