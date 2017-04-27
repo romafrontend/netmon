@@ -24,26 +24,26 @@
         </div>
     </div>
 
-    {% for firewall in firewalls_list %}
+    {% for corenetworkobject in corenetworkobjects_list %}
         <div class="container-fluid">
             <div class="row">
                 <div class="col">
-                {{ firewall.site_name }}
+                {{ corenetworkobject.site_name }}
                 </div>
                 <div class="col">
-                {{ firewall }}
+                {{ corenetworkobject }}
                 </div>
                 <div class="col">
-                {{ firewall.web_address }}
+                {{ corenetworkobject.web_address }}
                 </div>
                 <div class="col">
-                {{ firewall.cli_address }}
+                {{ corenetworkobject.cli_address }}
                 </div>
                 <div class="col">
-                {{ firewall.login }}
+                {{ corenetworkobject.login }}
                 </div>
                 <div class="col">
-                {{ firewall.password }}
+                {{ corenetworkobject.password }}
                 </div>
             </div>
         </div>   

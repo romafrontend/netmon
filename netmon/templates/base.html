@@ -49,14 +49,8 @@
           </li>
 
           {# Links to app.netobjects #}
-          <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-              NetObjects
-            </a>
-            <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-              <a class="dropdown-item" href="{% url 'netobjects:firewalls' %}">Firewalls</a>
-              <a class="dropdown-item" href="{% url 'netobjects:routers' %}">Routers</a>
-            </div>
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'netobjects:corenetworkobjects' %}">Network Objects</a>
           </li>
         </ul>
       </div>

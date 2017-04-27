@@ -22,7 +22,7 @@ class BluePrintNetworkObject(TimeStampedModel):
 
 
 class CoreNetworkObject(TimeStampedModel):
-    ''' THAT CLASS IS ABSTRACT. Everything bellow we use to create other network objects with common attributes,
+    ''' Everything bellow we use to create other network objects with common attributes,
     like firewalls and routers. Here we add fields only that unique for each device,
     like web address or login/pass. Exception is site_name and spec_model,
     we need those field to put objects in groups '''
@@ -35,31 +35,31 @@ class CoreNetworkObject(TimeStampedModel):
     spec_model = models.ForeignKey(BluePrintNetworkObject)
 
     # fields that suppose to be fullfilled automatically, I even do not permit to edit them
-    cli_address = models.CharField(max_length=255, blank=True, editable=False)  # 1.1.1.1:22 or blala.dyndns.org:22
-    ipv4_external_address = models.CharField(max_length=255, blank=True, editable=False)  # 255.255.255.255
-    dns_address = models.CharField(max_length=255, blank=True, editable=False)  # blablabla.dyndns.org
-
-    class Meta:
-        abstract = True
+    cli_address = models.CharField(max_length=255, blank=True)  # 1.1.1.1:22 or blala.dyndns.org:22
+    ipv4_external_address = models.CharField(max_length=255, blank=True)  # 255.255.255.255
+    dns_address = models.CharField(max_length=255, blank=True)  # blablabla.dyndns.org
 
     def pattern_web_address(self):
         '''First we create/find pattern of one key field, and then use it to autofill another fields'''
         # https://1.1.1.1 or https://1.1.1.1:443
-        pattern_web_address = re.match('(^\w+):1//(\d+.\d+.\d+.\d+)', self.web_address)
+        pattern_web_address = re.match('(^\w+)://(\d+.\d+.\d+.\d+)', self.web_address)
         dns_check = False  # flag, that show that web_address is IP address or DNS address, by defailt it's IP address
+
         if not pattern_web_address:
             pattern_web_address = re.match('(^\w+)://(.+):(\d+)', self.web_address)  # https://blabla.dyndns.org:65550
             dns_check = True
-        if not pattern_web_address:
-            pattern_web_address = re.match('(^\w+)://(.+)', self.web_address)  # https://blablabla.dyndns.org
-            dns_check = True
-        # automatically fullfill cli_address, dns_address/ipv4_external_address fields if pattern_web_address == True
-        if pattern_web_address:
-            self.cli_address = pattern_web_address.group(2) + ':' + str(self.cli_access_port)
-            if dns_check:  # fullfill only 1 of 2 fields: or dns or ipv4
-                self.dns_address = pattern_web_address.group(2)
-            else:
-                self.ipv4_external_address = pattern_web_address.group(2)
+            if not pattern_web_address:
+                pattern_web_address = re.match('(^\w+)://(.+)', self.web_address)  # https://blablabla.dyndns.org
+                dns_check = True
+
+        # automatically fullfill cli_address, dns_address/ipv4_external_address fields
+        self.cli_address = pattern_web_address.group(2) + ':' + str(self.cli_access_port)
+        if dns_check:  # fullfill only 1 of 2 fields: or dns or ipv4
+            self.dns_address = pattern_web_address.group(2)
+            self.ipv4_external_address = ""
+        else:
+            self.ipv4_external_address = pattern_web_address.group(2)
+            self.dns_address = ""
 
     def save(self, *args, **kwargs):
         CoreNetworkObject.pattern_web_address(self)
@@ -67,12 +67,3 @@ class CoreNetworkObject(TimeStampedModel):
 
     def __str__(self):
         return str(self.spec_model)
-
-
-class Firewall(CoreNetworkObject):
-    # that field we need only for other models to identify what they are working with
-    object_type = models.CharField(max_length=32, default='firewall', editable=False)
-
-
-class Router(CoreNetworkObject):
-    object_type = models.CharField(max_length=32, default='router', editable=False)
