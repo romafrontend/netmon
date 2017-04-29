@@ -1,3 +1,7 @@
+import paramiko
+import os
+
+
 def open_ssh_session(self, ip_address, dns_address, login, passw):
     '''initiate open session with  explicit netobject'''
     ssh = paramiko.SSHClient()
