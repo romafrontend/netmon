@@ -3,9 +3,6 @@ import os
 
 from celery import Celery
 
-# from apps.backups.models import BackupFirewal l
-from apps.backups.ssh_commands import open_ssh_session
-
 # set the default Django settings module for the 'celery' program.
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'config.settings.local')
 
@@ -18,7 +15,7 @@ app = Celery('netmon')
 app.config_from_object('django.conf:settings', namespace='CELERY')
 
 # Load task modules from all registered Django app configs.
-app.autodiscover_tasks()
+app.autodiscover_tasks(["apps.backups"])
 
 
 @app.task(bind=True)
