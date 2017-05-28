@@ -43,7 +43,8 @@ class CoreNetworkObject(TimeStampedModel):
         '''First we create/find pattern of one key field, and then use it to autofill another fields'''
         # https://1.1.1.1 or https://1.1.1.1:443
         pattern_web_address = re.match('(^\w+)://(\d+.\d+.\d+.\d+)', self.web_address)
-        dns_check = False  # flag, that show that web_address is IP address or DNS address, by defailt it's IP address
+        # flag, that show that web_address is IP address or DNS address, 'False' means that by defailt it's IP address
+        dns_check = False
 
         if not pattern_web_address:
             pattern_web_address = re.match('(^\w+)://(.+):(\d+)', self.web_address)  # https://blabla.dyndns.org:65550

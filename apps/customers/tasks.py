@@ -2,29 +2,15 @@ from celery import shared_task
 
 
 @shared_task
-def create_corp_user(ftp_username, ftp_password):
-    '''create new unix user on the server, also create the folder in /home for that user'''
-    import pexpect
-    command = pexpect.spawn("sudo adduser %s" % ftp_username)
-    command.expect("Enter new UNIX password: ")
-    command.sendline(ftp_password)
-    command.expect("Retype new UNIX password: ")
-    command.sendline(ftp_password)
-    command.expect(".*")  # Full Name []:
-    command.sendline("")
-    command.expect(".*")  # Room Number []:
-    command.sendline("")
-    command.expect(".*")  # Work Phone []:
-    command.sendline("")
-    command.expect(".*")  # Home Phone []:
-    command.sendline("")
-    command.expect(".*")  # Other []:
-    command.sendline("")
-    # there is mistake in the command, but I don't know how to solve it. Anyway it create new user, so doesn't matter
-    command.expect("Is the information correct? [Y/n] ")
-    command.sendline("")
+def create_site_folder_and_subfolders(corp_folder, site_folder, *subfolders):
+    '''we already have the corp user/folder in linux server, now we need to create site folder
+    for each site and also all subfolders like 'backups', 'documents' and etc '''
+    import os
+    from django.conf import settings
 
+    path_to_site_folder = "/%s/customers/%s/%s" % (settings.STATIC_ROOT, corp_folder, site_folder)
 
-@shared_task
-def create_site_folder_and_subfolders(corp_id):
-    pass
+    if not os.path.exists(path_to_site_folder):
+        for sub_dir in subfolders:
+            path_to_subdir = path_to_site_folder + "/" + sub_dir
+            os.makedirs(path_to_subdir)  # create subfolder and all folders in it's path

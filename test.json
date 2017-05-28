@@ -1,0 +1,58 @@
+[
+    {"model": "netobjects.corenetworkobject",
+        "pk": 1,
+        "fields": {
+            "created": "2017-04-26T13:42:56.185Z",
+            "modified": "2017-04-26T15:37:27.421Z",
+            "web_address": "https://tradeinter.dyndns.org",
+            "cli_access_port": 23,
+            "login": "admin",
+            "password": "Sat%io2262",
+            "site_name": 1,
+            "spec_model": 3,
+            "cli_address": "tradeinter.dyndns.org:23",
+            "ipv4_external_address": "",
+            "dns_address": "tradeinter.dyndns.org"
+        }
+    },
+    {"model": "netobjects.corenetworkobject",
+        "pk": 2,
+        "fields": {
+            "created": "2017-04-26T13:42:56.185Z",
+            "modified": "2017-04-26T15:37:27.421Z",
+            "web_address": "https://tradeinter.dyndns.org",
+            "cli_access_port": 23,
+            "login": "admin",
+            "password": "Sat%io2262",
+            "site_name": 1,
+            "spec_model": 3,
+            "cli_address": "tradeinter.dyndns.org:23",
+            "ipv4_external_address": "",
+            "dns_address": "tradeinter.dyndns.org"
+        }
+    },
+    {"model": "netobjects.corenetworkobject",
+        "pk": 3,
+        "fields": {
+            "created": "2017-04-26T13:42:56.185Z",
+            "modified": "2017-04-26T15:37:27.421Z",
+            "web_address": "https://tradeinter.dyndns.org",
+            "cli_access_port": 23,
+            "login": "admin",
+            "password": "Sat%io2262",
+            "site_name": 1,
+            "spec_model": 3,
+            "cli_address": "tradeinter.dyndns.org:23",
+            "ipv4_external_address": "",
+            "dns_address": "tradeinter.dyndns.org"
+        }
+    },
+]
+
+{
+    "table": [
+        {"web_address": "https://tradeinter.dyndns.org", "id": 2, "cli_address": "tradeinter.dyndns.org:23"},
+        {"web_address": "https://105.174.5.162:981", "id": 3, "cli_address": "105.174.5.162:22"},
+        {"web_address": "https://41.207.231.66:981", "id": 1, "cli_address": "41.207.231.66:22"}
+    ]
+}

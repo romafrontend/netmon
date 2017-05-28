@@ -1,0 +1,199 @@
+
+<!DOCTYPE html>
+  <head>
+  	
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width; initial-scale=1.0; maximum-scale=1.0; user-scalable=no;"/>
+    <meta name="apple-mobile-web-app-capable" content="yes"/>
+    	  	
+  	<style>
+  		
+      .appBody {
+        background-color: #edf5f9;
+      }
+      
+      .min_size {           
+        min-width: 300px;
+        min-height: 400px;
+      }
+      
+      .scroll_y_auto {
+          overflow-y: auto;
+          overflow-x: hidden;
+          -webkit-overflow-scrolling: touch;
+      } 
+      
+      .row {
+        height:30px;	
+        max-height:40px;
+      }
+      
+      .cell {
+        border: solid 1px black;	
+      } 
+
+      .panel_general_flex_column {
+        position: relative;
+        flex-grow: 1;
+        -webkit-flex-grow: 1;
+        -ms-flex: 1 1 auto;
+      }        
+      
+      .panel_general_flex_column > div {
+          position: absolute;
+          top: 0px;
+          bottom: 0px;
+          left: 0px;
+          right: 0px;
+          display: -webkit-flex;
+          display: flex;
+          display: -ms-flexbox;
+          -webkit-flex-wrap: nowrap;
+          flex-wrap: nowrap;
+          -ms-flex-wrap: nowrap;
+          -webkit-flex-direction: column;
+          flex-direction: column;
+          -ms-flex-direction: column;
+          -webkit-justify-content: center;
+          justify-content: center;
+          -ms-flex-pack: center;
+      } 
+
+      .panel_general_flex_row[style*="height"] {
+          flex-grow: 0;
+          -webkit-flex-grow: 0;
+          -ms-flex: 0 1 auto;
+      }
+      
+      .panel_general_flex_row {
+          position: relative;
+          flex-grow: 1;
+          -webkit-flex-grow: 1;
+          -ms-flex: 1 1 auto;
+          width: 100%;
+          /* height: 100%; */
+      }
+      
+      .panel_general_flex_row > div {
+          position: absolute;
+          top: 0px;
+          bottom: 0px;
+          left: 0px;
+          right: 0px;
+          display: flex;
+          display: -webkit-flex;
+          display: -ms-flexbox;
+          flex-wrap: nowrap;
+          -webkit-flex-wrap: nowrap;
+          -ms-flex-wrap: nowrap;
+          flex-direction: row;
+          -webkit-flex-direction: row;
+          -ms-flex-direction: row;
+          -webkit-justify-content: center;
+          justify-content: center;
+          -ms-flex-pack: center;
+      }
+      		
+  	</style>
+  
+  </head>
+  <body onload="sendRequest()">
+  	
+    <div class="panel_general_flex_column appBody min_size" id="carousel" style="position:absolute;top:0px;bottom:0px;left:0px;right:0px;z-index:1;">
+    	<div class="contant_holder">
+        <div class="panel_general_flex_column scroll_y_auto">
+          <div class="contant_holder" id="tableParent">
+
+          </div>	
+        </div>      		
+    	</div>
+    </div>
+    
+    <script>	
+      
+      function sendRequest(){
+        try{
+	
+  	      var jsonStas = {{ my_json|safe }}
+
+          console.log(jsonStas)
+
+          console.log(typeof(jsonStas))
+
+  	   	  var xhr;
+  	   	  if(window.XMLHttpRequest){
+  	   	  	xhr = new XMLHttpRequest();
+  	   	  }else{
+  	   	    xhr = new ActiveXObject("Microsoft.XMLHTTP");	
+  	   	  }
+  	   	  
+  	      xhr.onreadystatechange = function() {
+  	        try{
+  	          if(this.readyState == 4 && this.status == 200){
+  	          	 //this your json
+  	          	 console.log(this.responseText);
+  	          	
+  	          	 //this javascript object
+  	          	 console.log(JSON.parse(this.responseText));
+  	          	  	
+  	          	 //createTable(JSON.parse(this.responseText));
+                 createTable(JSON.parse(this.responseText));
+  	          }
+  	        }catch(err){
+  	        	console.log('connect.onreadystatechange: ',err);
+  	        }	
+  	      }
+  	     
+  	      xhr.open('GET','http://192.168.122.10:8000/netobjects/json_corenetworkobjects/');	
+          xhr.setRequestHeader('Content-Type','application/json');
+  	      xhr.send();
+  	               	
+        }catch(err){
+          console.log('sendRequest: ',err);	
+        }	
+      } 
+        
+      function createTable(_jsonStas){
+        try{
+          
+          console.log(_jsonStas.table,_jsonStas.table.length)
+          
+          var tableParent = document.getElementById("tableParent");
+           
+          for(var i=0;i < _jsonStas.table.length;i++){
+          	var elmRow = document.createElement('div');
+            elmRow.className ="contant_holder";
+          	var elmRowCon = document.createElement('div');
+            elmRowCon.className ="panel_general_flex_row row";
+            elmRowCon.appendChild(elmRow);            
+
+          	var cell_id = document.createElement('div');
+            cell_id.id = "cell_id";
+            cell_id.className ="panel_general_flex_row cell"; 
+            cell_id.innerText = _jsonStas.table[i].id;  
+            elmRow.appendChild(cell_id);         
+
+            var cell_web = document.createElement('div');
+            cell_web.id = "cell_web";
+            cell_web.className ="panel_general_flex_row cell";     
+            cell_web.innerText = _jsonStas.table[i].web_address;
+            elmRow.appendChild(cell_web); 
+            
+            var cell_cli = document.createElement('div');
+            cell_cli.id = "cell_cli";
+            cell_cli.className ="panel_general_flex_row cell"; 
+            cell_cli.innerText = _jsonStas.table[i].cli_address;
+            elmRow.appendChild(cell_cli);
+
+            tableParent.appendChild(elmRowCon);
+          } 
+           
+        }catch(err){
+          console.log('createTable: ',err);
+        }
+      }             
+    
+    </script>
+  	
+  </body>

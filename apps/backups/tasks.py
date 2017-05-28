@@ -2,37 +2,52 @@ from celery import shared_task
 
 
 @shared_task
-def fortigate_backup(backup_id):
-    '''initiate backup from firewall to the ftp server to backup folder'''
+def device_backup(corp_folder, site_folder, device_folder, backup_id):
+    '''initiate backup from network device via ftp server to backup folder'''
+    from django.conf import settings
     from .models import CoreBackup
-    from .ssh_commands import open_ssh_session, create_new_folder_for_backups
+    from .common_scripts import open_ssh_session, create_backup_folder
+    from datetime import datetime
 
-    backup = CoreBackup.objects.get(id=backup_id)  # create value == backup
-    firewall = backup.object_backup  # create value == object of the firewall
+    backup = CoreBackup.objects.get(id=backup_id)  # == backup
+    netobject = backup.object_backup  # == object of the firewall
 
-    # open new session with usage of paramiko python library
-    ssh = open_ssh_session(firewall.ipv4_external_address, firewall.dns_address, firewall.login, firewall.password)
+    path_to_backup_file = create_backup_folder(settings.STATIC_ROOT, corp_folder, site_folder, device_folder)
 
-    # create/check folder for future save location of the file
-    path_to_backup_file = create_new_folder_for_backups(
-        firewall.site_name.company_name, firewall.site_name.name, firewall.model_family, firewall.model_version
-    )
+    ssh = open_ssh_session(netobject.ipv4_external_address, netobject.dns_address, netobject.login, netobject.password)
 
-    # we send something like that:
-    # "execute backup full-config ftp /home/company/site/backups/firewall/file.conf 1.1.1.1 company iosatcompany"
-    command = "execute backup full-config ftp %s %s %s %s" % (
-        path_to_backup_file,
-        backup.ftp_server_address,  # FTP server address and port
-        firewall.site_name.company_name.lower(),
-        'iosat' + firewall.site_name.company_name.lower()
-    )
+    if 'FortiGate' in str(netobject):
+        file_name = datetime.strftime(datetime.now(), '%Y%m%d_%H%M%S') + '.conf'  # it's like 20170101_120101.conf
+        # we send something like that:
+        # execute backup full-config ftp /home/netmon/staticfiles/comp/site/backups/firewall/file.conf 1.1.1.1 user pas
+        command = "execute backup full-config ftp %s/%s %s %s %s" % (
+            path_to_backup_file, file_name, settings.SERVER_EXTERNAL_IP, settings.FTP_USER_LOGIN,
+            settings.FTP_USER_PASSWORD
+        )
+        # after opening of the session, we need to input (stdin) the command that allow firewall to open ftp session
+        # with our server and save config file to specific folder.
+        stdin, stdout, stderr = ssh.exec_command(command)
+        log = stdout.read()
+        # close the ssh session after job had been done
 
-    # after opening of the session, we need to input (stdin) the command that allow firewall to open ftp session
-    # with our server and save config file to specific folder.
-    stdin, stdout, stderr = ssh.exec_command(command)
+        ssh.close()
+        return (command, log)
 
-    log = stdout.read()[:]  # thanks to 'log' later we can see the status of the task in backup object
+    elif 'Cisco' in str(netobject):
+        ssh = ssh.invoke_shell()  # Use invoke_shell to establish an 'interactive session'
 
-    # close the ssh session after job had been done
-    ssh.close()
-    return (command, log)
+        list_of_commands = [
+            "config terminal" + '\n',
+            "ip ftp username %s" % settings.FTP_USER_LOGIN + '\n',
+            "ip ftp password %s" % settings.FTP_USER_PASSWORD + '\n',
+            "end" + '\n',
+            "copy running-config ftp" + '\n',
+            settings.SERVER_EXTERNAL_IP + '\n',
+            path_to_backup_file, "backup_cfg_for_router" + '\n'
+        ]
+        output = ''
+        for command in list_of_commands:
+            ssh.send(command)
+            output += ssh.recv(1000)
+
+        return (output)
