@@ -5,7 +5,7 @@ import re  # module for searches
 from apps.core.models import TimeStampedModel
 from apps.customers.models import Company, Site
 
-from .choices import OBJECT_TYPE
+from .dropdown_options import OBJECT_TYPE
 # Create your models here.
 
 
@@ -40,7 +40,7 @@ class CoreNetworkObject(TimeStampedModel):
     dns_address = models.CharField(max_length=255, blank=True)  # blablabla.dyndns.org
 
     def pattern_web_address(self):
-        '''First we create/find pattern of one key field, and then use it to autofill another fields'''
+        '''First we create/find pattern from web_address field, and then use it to autofill another fields'''
         # https://1.1.1.1 or https://1.1.1.1:443
         pattern_web_address = re.match('(^\w+)://(\d+.\d+.\d+.\d+)', self.web_address)
         # flag, that show that web_address is IP address or DNS address, 'False' means that by defailt it's IP address

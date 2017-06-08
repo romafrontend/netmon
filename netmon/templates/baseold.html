@@ -63,8 +63,7 @@
                   NetObjects
                 </a>
                 <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-                  <a class="dropdown-item" href="{% url 'netobjects:firewalls' %}">Firewalls</a>
-                  <a class="dropdown-item" href="{% url 'netobjects:routers' %}">Routers</a>
+                  <a class="dropdown-item" href="{% url 'netobjects:corenetworkobjects' %}">Network Objects</a>
                 </div>
               </li>
             </ul>
@@ -95,6 +94,7 @@
       </nav>
     </div>
 
+    <!-- container -->
     <div class="container">
 
       {% if messages %}
@@ -107,7 +107,7 @@
         <p>Use this document as a way to quick start any new project.</p>
       {% endblock content %}
 
-    </div> <!-- /container -->
+    </div>
 
     {% block modal %}{% endblock modal %}
 
